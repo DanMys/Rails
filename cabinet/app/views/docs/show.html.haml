@@ -1,7 +1,9 @@
-%h1= @doc.title
-%p= @doc.content
+.wrapper_with_padding
+  #doc_show
+    %h1= @doc.title
+    %p= simple_format(@doc.content)
 
--# Todos provienen de las rutas(revisar rake routes)
-= link_to "All Docs", docs_path
-= link_to "Fix Doc", edit_doc_path(@doc)
-= link_to "Trash It", doc_path(@doc), method: :delete, data: { confirm: "Are you sure?"}
+    .buttons
+      -# Todos provienen de las rutas(revisar rake routes)
+      = link_to "Fix Doc", edit_doc_path(@doc), class: "button"
+      = link_to "Trash It", doc_path(@doc), method: :delete, data: { confirm: "Are you sure?"}, class: "button"

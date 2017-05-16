@@ -4,19 +4,19 @@ class DocsController < ApplicationController
   before_action :find_doc, only: [:show, :edit, :update, :destroy]
 
   def index
-    @docs = Doc.all.order("created_at DESC")
+    @docs = Doc.where(user_id: current_user)
   end
 
   def show
   end
 
   def new
-    @doc = Doc.new
+    @doc = current_user.docs.build
   end
 
   # No tiene vista propia
   def create
-    @doc = Doc.new(doc_params)
+    @doc = current_user.docs.build(doc_params)
 
     # Si el documento se guarda, redirgir al documento, si no
     # mandar de nuevo al metodo new, para tratar de nuevo
