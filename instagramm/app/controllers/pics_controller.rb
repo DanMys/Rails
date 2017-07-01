@@ -1,5 +1,7 @@
 class PicsController < ApplicationController
-  before_action :find_pic, only: [:show, :update, :edit, :destroy]
+  before_action :authorize, only: [:edit, :destroy]
+  before_action :find_pic, only: [:show, :update, :edit, :destroy, :upvote]
+  before_action :authenticate_user!, except: [:index, :show]
   def index
     @pics = Pic.all.order("created_at DESC")
   end
@@ -37,6 +39,11 @@ class PicsController < ApplicationController
     redirect_to root_path
   end
 
+  def upvote
+    @pic.upvote_by current_user
+    redirect_to :back
+  end
+
 
   private
   def pic_params
@@ -46,5 +53,14 @@ class PicsController < ApplicationController
   def find_pic
     @pic = Pic.find(params[:id])
   end
+
+  def authorize
+  @pic = Pic.find(params[:id])
+  unless @pic.user_id == current_user.id
+    flash[:notice] = "You are not the creator of this article, therefore you're not permitted to edit or destroy this article"
+    redirect_to root_path # or anything you prefer
+    return false # Important to let rails know that the controller should not be executed
+  end
+end
 
 end
